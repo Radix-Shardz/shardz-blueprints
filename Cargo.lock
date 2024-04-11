@@ -1248,7 +1248,7 @@ dependencies = [
 [[package]]
 name = "test-engine"
 version = "0.2.0"
-source = "git+https://github.com/BeakerDAO/scrypto-toolkit?branch=develop#e7ba182d869de2afa5ada6849a2cee8df8ceabcf"
+source = "git+https://github.com/BeakerDAO/scrypto-toolkit?branch=develop#20f014ea2b2e2998e6c5677b75612b95e41dc445"
 dependencies = [
  "lazy_static",
  "radix-engine",

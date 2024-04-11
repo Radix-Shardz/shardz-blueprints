@@ -1,6 +1,6 @@
 use scrypto::prelude::*;
 
-#[derive(ScryptoSbor, PartialEq, Debug, Clone)]
+#[derive(ScryptoSbor, ManifestSbor, PartialEq, Debug, Clone)]
 pub enum ShardType {
     Clear,
     Yellow,
@@ -13,14 +13,15 @@ pub enum ShardType {
 #[derive(NonFungibleData, ScryptoSbor, Debug)]
 pub struct ShardNFT {
     key_image_url: Url,
-    shard_type: ShardType,
+    pub shard_type: ShardType,
     fungible_address: ResourceAddress,
     mint_time: Instant,
 }
 
-#[derive(NonFungibleData, ScryptoSbor, Debug)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Debug)]
 pub struct ShardTicket {
-    shard_type: Option<ShardType>
+    #[mutable]
+    pub shard_type: Option<ShardType>
 }
 
 impl ShardType {
@@ -57,7 +58,7 @@ mod rrc404 {
 
     impl Shardz {
 
-        pub fn instantiate_shardz() -> (Global<Shardz>, FungibleBucket) {
+        pub fn instantiate_shardz(dapp_definition: ComponentAddress) -> (Global<Shardz>, FungibleBucket) {
 
             let (address_reservation, component_address) =
                 Runtime::allocate_component_address(<Shardz>::blueprint_id());
@@ -145,7 +146,17 @@ mod rrc404 {
                     destroy => Xrd(1.into()), updatable;
                     swap_tickets => Free, updatable;
                 }
-            })
+            }).metadata(metadata!(roles {
+            metadata_setter => rule!(deny_all);
+            metadata_setter_updater => rule!(deny_all);
+            metadata_locker => rule!(deny_all);
+            metadata_locker_updater => rule!(deny_all);
+            },
+            init {
+                    "dapp_definition" => GlobalAddress::from(dapp_definition), updatable;
+                    "name" => "Shardz", updatable;
+                    "description" => SHARDZ_DESCRIPTION, updatable;
+                }))
             .globalize();
 
             (component, shardz_fungible)
@@ -179,7 +190,7 @@ mod rrc404 {
             assert_eq!(ticket_bucket.resource_address(), self.shardz_ticket.address(), "Incorrect resource address");
             let mut nft_bucket: Bucket = Bucket::new(self.shardz_nft.address());
 
-            for nft_ticket in nft_bucket.as_non_fungible().non_fungibles(){
+            for nft_ticket in ticket_bucket.as_non_fungible().non_fungibles(){
                 let ticket: ShardTicket = nft_ticket.data();
                 if let Some(shard_type) = ticket.shard_type {
                     let nft_id = NonFungibleLocalId::from(self.nft_counter);

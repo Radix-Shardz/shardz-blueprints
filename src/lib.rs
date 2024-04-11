@@ -1,1 +1,1 @@
-mod shardz;
+pub mod shardz;
