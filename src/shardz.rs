@@ -12,6 +12,7 @@ pub enum ShardType {
 
 #[derive(NonFungibleData, ScryptoSbor, Debug)]
 pub struct ShardNFT {
+    name: String,
     key_image_url: Url,
     pub shard_type: ShardType,
     fungible_address: ResourceAddress,
@@ -27,12 +28,23 @@ pub struct ShardTicket {
 impl ShardType {
     fn url(&self) -> Url {
         match self {
-            ShardType::Clear => { Url::of("https://i.ibb.co/9GYxDxC/shard-clear.jpg") }
-            ShardType::Yellow => { Url::of("https://i.ibb.co/J7zrKyJ/shard-yellow.jpg") }
-            ShardType::Orange => { Url::of("https://i.ibb.co/k4tBQ0T/shard-orange.jpg") }
-            ShardType::Blue => { Url::of("https://i.ibb.co/591jWnJ/shard-blue.jpg") }
-            ShardType::Scrypto => { Url::of("https://i.ibb.co/P1Mxvnh/shard-scrypto.jpg") }
-            ShardType::Radix => { Url::of("https://i.ibb.co/ZWYfDw3/shard-radix.jpg") }
+            ShardType::Clear => { Url::of("https://bafybeigucelugs5ej3uak3jmwg5tqlotlk2izaezqvvtcdaa2xbnpchdea.ipfs.dweb.link/") }
+            ShardType::Yellow => { Url::of("https://bafybeif2hgh76mc4ak4wqqqd5mm36mrboxirlb777cm5gyjpbefu5j75qm.ipfs.dweb.link/") }
+            ShardType::Orange => { Url::of("https://bafybeib7lcjwxchh5qv7lwtbizzd2wj5khjrexir6rx25fsqrlspxajk3m.ipfs.dweb.link/") }
+            ShardType::Blue => { Url::of("https://bafybeih3ctg2msgjdfcp6jfioyxbcsxkvyw3yxhsz36m4zmogieio3riau.ipfs.dweb.link/") }
+            ShardType::Scrypto => { Url::of("https://bafybeihf7lg7mokz3567xhm6leqo6oqte3k3nglg5jmwm67s435bv2zfma.ipfs.dweb.link/") }
+            ShardType::Radix => { Url::of("https://bafybeidyubnqsioriwika3hlyrpzu43zc6gipplftgpcjjbghu5xls6zma.ipfs.dweb.link/") }
+        }
+    }
+
+    fn name(&self) -> String {
+        match self {
+            ShardType::Clear => { "Clear Shard".to_string() }
+            ShardType::Yellow => { "Yellow Shard".to_string() }
+            ShardType::Orange => { "Orange Shard".to_string() }
+            ShardType::Blue => { "Blue Shard".to_string() }
+            ShardType::Scrypto => { "Scrypto Shard".to_string() }
+            ShardType::Radix => { "Radix Shard".to_string() }
         }
     }
 }
@@ -41,10 +53,7 @@ impl ShardType {
 #[types(Vault, NonFungibleLocalId, NonFungibleGlobalId)]
 mod rrc404 {
 
-    const SHARDZ_BADGE: ResourceAddress = ResourceAddress::new_or_panic([
-        93, 11, 31, 125, 68, 106, 114, 113, 154, 80, 187, 244, 241, 233, 191, 51, 92, 8, 98, 88,
-        43, 68, 5, 66, 3, 186, 89, 238, 225, 122,
-    ]);
+    const SHARDZ_BADGE: ResourceAddress = ResourceAddress::new_or_panic([93, 13, 136, 63, 125, 136, 48, 208, 196, 7, 181, 57, 241, 8, 5, 101, 178, 118, 134, 152, 233, 223, 249, 160, 210, 45, 49, 38, 26, 28]);
 
     const SHARDZ_DESCRIPTION: &str = "Shardz is a revolutionary NFT mini game built on the Radix ledger. 1000 tokens can be shattered and bonded in an attempt to find the rarest shards.";
 
@@ -113,7 +122,7 @@ mod rrc404 {
                     init {
                         "name" => "Shard Ticket", updatable;
                         "description" => "Can be traded for a shard NFT", locked;
-                        "icon_url" => Url::of("https://cdn-icons-png.flaticon.com/512/4406/4406665.png"), updatable;
+                        "icon_url" => Url::of("https://bafybeifbuba5i7qxxroxnlvgv34iesddvoiticlmy67oyhwyuvoineffke.ipfs.dweb.link/"), updatable;
                     }
                 ))
                 .mint_roles(mint_roles!{
@@ -196,6 +205,7 @@ mod rrc404 {
                     let nft_id = NonFungibleLocalId::from(self.nft_counter);
 
                     let data = ShardNFT {
+                        name: shard_type.name(),
                         key_image_url: shard_type.url(),
                         shard_type,
                         fungible_address: self.shardz_fungible.address(),

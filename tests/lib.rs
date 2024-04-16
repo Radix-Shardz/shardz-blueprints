@@ -21,7 +21,7 @@ mod shardz_tests {
         test_engine.add_token(
             "admin badge",
             1,
-            "resource_tdx_2_1t5937l2ydfe8rxjsh060r6dlxdwqscjc9dzq2ssrhfv7act63say5g",
+            "resource_tdx_2_1t5xcs0ma3qcdp3q8k5ulzzq9vke8dp5ca80lngxj95cjvxsuqrzzp0",
             NetworkDefinition::stokenet(),
         );
 
