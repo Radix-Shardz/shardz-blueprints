@@ -28,12 +28,12 @@ pub struct ShardTicket {
 impl ShardType {
     fn url(&self) -> Url {
         match self {
-            ShardType::Clear => { Url::of("https://bafybeigucelugs5ej3uak3jmwg5tqlotlk2izaezqvvtcdaa2xbnpchdea.ipfs.dweb.link/") }
-            ShardType::Yellow => { Url::of("https://bafybeif2hgh76mc4ak4wqqqd5mm36mrboxirlb777cm5gyjpbefu5j75qm.ipfs.dweb.link/") }
-            ShardType::Orange => { Url::of("https://bafybeib7lcjwxchh5qv7lwtbizzd2wj5khjrexir6rx25fsqrlspxajk3m.ipfs.dweb.link/") }
-            ShardType::Blue => { Url::of("https://bafybeih3ctg2msgjdfcp6jfioyxbcsxkvyw3yxhsz36m4zmogieio3riau.ipfs.dweb.link/") }
-            ShardType::Scrypto => { Url::of("https://bafybeihf7lg7mokz3567xhm6leqo6oqte3k3nglg5jmwm67s435bv2zfma.ipfs.dweb.link/") }
-            ShardType::Radix => { Url::of("https://bafybeidyubnqsioriwika3hlyrpzu43zc6gipplftgpcjjbghu5xls6zma.ipfs.dweb.link/") }
+            ShardType::Clear => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeigucelugs5ej3uak3jmwg5tqlotlk2izaezqvvtcdaa2xbnpchdea/") }
+            ShardType::Yellow => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeif2hgh76mc4ak4wqqqd5mm36mrboxirlb777cm5gyjpbefu5j75qm/") }
+            ShardType::Orange => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeib7lcjwxchh5qv7lwtbizzd2wj5khjrexir6rx25fsqrlspxajk3m/") }
+            ShardType::Blue => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeih3ctg2msgjdfcp6jfioyxbcsxkvyw3yxhsz36m4zmogieio3riau/") }
+            ShardType::Scrypto => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeihf7lg7mokz3567xhm6leqo6oqte3k3nglg5jmwm67s435bv2zfma/") }
+            ShardType::Radix => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeidyubnqsioriwika3hlyrpzu43zc6gipplftgpcjjbghu5xls6zma/") }
         }
     }
 
@@ -53,7 +53,7 @@ impl ShardType {
 #[types(Vault, NonFungibleLocalId, NonFungibleGlobalId)]
 mod rrc404 {
 
-    const SHARDZ_BADGE: ResourceAddress = ResourceAddress::new_or_panic([93, 13, 136, 63, 125, 136, 48, 208, 196, 7, 181, 57, 241, 8, 5, 101, 178, 118, 134, 152, 233, 223, 249, 160, 210, 45, 49, 38, 26, 28]);
+    const SHARDZ_BADGE: ResourceAddress = ResourceAddress::new_or_panic([93, 201, 69, 13, 168, 220, 149, 250, 145, 246, 251, 14, 141, 249, 121, 69, 17, 239, 203, 88, 143, 1, 136, 216, 202, 236, 14, 143, 247, 158]);
 
     const SHARDZ_DESCRIPTION: &str = "Shardz is a revolutionary NFT mini game built on the Radix ledger. 1000 tokens can be shattered and bonded in an attempt to find the rarest shards.";
 
@@ -62,7 +62,7 @@ mod rrc404 {
         shardz_nft: ResourceManager,
         shardz_ticket: ResourceManager,
         nft_counter: u64,
-        ticket_counter: u64
+        ticket_counter: u64,
     }
 
     impl Shardz {
@@ -122,7 +122,7 @@ mod rrc404 {
                     init {
                         "name" => "Shard Ticket", updatable;
                         "description" => "Can be traded for a shard NFT", locked;
-                        "icon_url" => Url::of("https://bafybeifbuba5i7qxxroxnlvgv34iesddvoiticlmy67oyhwyuvoineffke.ipfs.dweb.link/"), updatable;
+                        "icon_url" => Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeifbuba5i7qxxroxnlvgv34iesddvoiticlmy67oyhwyuvoineffke/"), updatable;
                     }
                 ))
                 .mint_roles(mint_roles!{

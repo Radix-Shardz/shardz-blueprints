@@ -1,10 +1,6 @@
 #[cfg(test)]
 mod shardz_tests {
-    use scrypto::prelude::*;
-    use test_engine::{env_args, global_package};
-    use test_engine::environment::Environment;
-    use test_engine::receipt_traits::Outcome;
-    use test_engine::test_engine::TestEngine;
+    use test_engine::prelude::*;
 
     use radix_shardz::shardz::{ShardNFT, ShardTicket, ShardType};
 
@@ -18,10 +14,10 @@ mod shardz_tests {
         test_engine.new_account("user2");
         test_engine.set_current_account("admin");
 
-        test_engine.add_token(
+        test_engine.new_token_with_address(
             "admin badge",
             1,
-            "resource_tdx_2_1t5xcs0ma3qcdp3q8k5ulzzq9vke8dp5ca80lngxj95cjvxsuqrzzp0",
+            "resource_tdx_2_1thy52rdgmj2l4y0klv8gm7teg5g7lj6c3uqc3kx2as8glau7x9rluj",
             NetworkDefinition::stokenet(),
         );
 
@@ -49,7 +45,7 @@ mod shardz_tests {
     fn test_bond() {
         let mut test_engine = instantiate();
 
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("shard", dec!("3.23"))))
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("shard", dec!("3.23"))))
             .expect_commit_success();
 
         assert_eq!(test_engine.current_balance("Shard"), dec!(997));
@@ -58,10 +54,10 @@ mod shardz_tests {
         let mut shard_tickets = test_engine.current_ids_balance("Shard Ticket");
         shard_tickets.sort();
 
-        assert_eq!(shard_tickets, vec![NonFungibleLocalId::from(1), NonFungibleLocalId::from(2), NonFungibleLocalId::from(3)]);
+        assert_eq!(shard_tickets, nf_ids![1,2,3]);
 
         for i in 1..4 {
-            let ticket_data: ShardTicket = test_engine.get_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(i));
+            let ticket_data: ShardTicket = test_engine.get_non_fungible_data("Shard Ticket", i);
             assert_eq!(ticket_data, ShardTicket{shard_type: None})
         }
     }
@@ -70,18 +66,18 @@ mod shardz_tests {
     fn test_bond_xrd_fails() {
         let mut test_engine = instantiate();
 
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("xrd", dec!("3.23")))).assert_failed_with("Incorrect resource address");
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("xrd", dec!("3.23")))).assert_failed_with("Incorrect resource address");
     }
 
     #[test]
     fn test_set_ticket_data() {
         let mut test_engine = instantiate();
 
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("shard", dec!("3.23"))));
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("shard", dec!("3.23"))));
 
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(1), "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 1, "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
 
-        let ticket_data: ShardTicket = test_engine.get_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(1));
+        let ticket_data: ShardTicket = test_engine.get_non_fungible_data("Shard Ticket", 1);
         assert_eq!(ticket_data, ShardTicket{shard_type: Some(ShardType::Blue)});
     }
 
@@ -89,9 +85,9 @@ mod shardz_tests {
     fn test_random_cannot_set() {
         let mut test_engine = instantiate();
 
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("shard", dec!("3.23"))));
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("shard", dec!("3.23"))));
 
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(1), "shard_type", env_args!(Some(ShardType::Blue)), "xrd").assert_failed_with("");
+        test_engine.update_non_fungible_data("Shard Ticket", 1, "shard_type", env_args!(Some(ShardType::Blue)), "xrd").assert_failed_with("");
     }
 
 
@@ -99,18 +95,18 @@ mod shardz_tests {
     fn test_all_swap_combinations() {
         let mut test_engine = instantiate();
 
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("shard", dec!("6"))));
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("shard", dec!("6"))));
 
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(1), "shard_type", env_args!(Some(ShardType::Clear)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(2), "shard_type", env_args!(Some(ShardType::Yellow)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(3), "shard_type", env_args!(Some(ShardType::Orange)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(4), "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(5), "shard_type", env_args!(Some(ShardType::Scrypto)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(6), "shard_type", env_args!(Some(ShardType::Radix)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 1, "shard_type", env_args!(Some(ShardType::Clear)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 2, "shard_type", env_args!(Some(ShardType::Yellow)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 3, "shard_type", env_args!(Some(ShardType::Orange)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 4, "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 5, "shard_type", env_args!(Some(ShardType::Scrypto)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 6, "shard_type", env_args!(Some(ShardType::Radix)), "admin badge").expect_commit_success();
 
-        let ids= vec![NonFungibleLocalId::from(1), NonFungibleLocalId::from(2), NonFungibleLocalId::from(3), NonFungibleLocalId::from(4), NonFungibleLocalId::from(5), NonFungibleLocalId::from(6)];
+        let ids= nf_ids![1, 2, 3, 4, 5, 6];
 
-        test_engine.call_method("swap_tickets", env_args!(Environment::NonFungibleBucket("Shard Ticket", ids.clone()))).expect_commit_success();
+        test_engine.call_method("swap_tickets", env_args!(NonFungible::Bucket("Shard Ticket", ids.clone()))).expect_commit_success();
 
         let nft_ticket_owned = test_engine.current_ids_balance("Shard Ticket");
         let mut nft_owned = test_engine.current_ids_balance("Shard NFT");
@@ -139,43 +135,43 @@ mod shardz_tests {
     }
 
     #[test]
-    fn test_all_swap_combination_and_destroy() {
-        let mut test_engine = instantiate();
-
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("shard", dec!("6"))));
-
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(1), "shard_type", env_args!(Some(ShardType::Clear)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(2), "shard_type", env_args!(Some(ShardType::Yellow)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(3), "shard_type", env_args!(Some(ShardType::Orange)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(4), "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(5), "shard_type", env_args!(Some(ShardType::Scrypto)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(6), "shard_type", env_args!(Some(ShardType::Radix)), "admin badge").expect_commit_success();
-
-        let ids= vec![NonFungibleLocalId::from(1), NonFungibleLocalId::from(2), NonFungibleLocalId::from(3), NonFungibleLocalId::from(4), NonFungibleLocalId::from(5), NonFungibleLocalId::from(6)];
-        test_engine.call_method("swap_tickets", env_args!(Environment::NonFungibleBucket("Shard Ticket", ids.clone()))).expect_commit_success();
-
-        test_engine.call_method("destroy", env_args!(Environment::NonFungibleBucket("Shard NFT", ids))).assert_failed_with("There is a 4 hour delay between minting and rerolling");
-    }
-
-    #[test]
     fn test_all_swap_combination_and_destroy_fails_reroll() {
         let mut test_engine = instantiate();
 
-        test_engine.call_method("bond", env_args!(Environment::FungibleBucket("shard", dec!("6"))));
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("shard", 6)));
 
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(1), "shard_type", env_args!(Some(ShardType::Clear)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(2), "shard_type", env_args!(Some(ShardType::Yellow)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(3), "shard_type", env_args!(Some(ShardType::Orange)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(4), "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(5), "shard_type", env_args!(Some(ShardType::Scrypto)), "admin badge").expect_commit_success();
-        test_engine.update_non_fungible_data("Shard Ticket", NonFungibleLocalId::from(6), "shard_type", env_args!(Some(ShardType::Radix)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 1, "shard_type", env_args!(Some(ShardType::Clear)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 2, "shard_type", env_args!(Some(ShardType::Yellow)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 3, "shard_type", env_args!(Some(ShardType::Orange)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 4, "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 5, "shard_type", env_args!(Some(ShardType::Scrypto)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 6, "shard_type", env_args!(Some(ShardType::Radix)), "admin badge").expect_commit_success();
 
-        let ids= vec![NonFungibleLocalId::from(1), NonFungibleLocalId::from(2), NonFungibleLocalId::from(3), NonFungibleLocalId::from(4), NonFungibleLocalId::from(5), NonFungibleLocalId::from(6)];
-        test_engine.call_method("swap_tickets", env_args!(Environment::NonFungibleBucket("Shard Ticket", ids.clone()))).expect_commit_success();
+        let ids= nf_ids![1, 2, 3, 4, 5, 6];
+        test_engine.call_method("swap_tickets", env_args!(NonFungible::Bucket("Shard Ticket", ids.clone()))).expect_commit_success();
+
+        test_engine.call_method("destroy", env_args!(NonFungible::Bucket("Shard NFT", ids))).assert_failed_with("There is a 4 hour delay between minting and rerolling");
+    }
+
+    #[test]
+    fn test_all_swap_combination_and_destroy() {
+        let mut test_engine = instantiate();
+
+        test_engine.call_method("bond", env_args!(Fungible::Bucket("shard", dec!("6"))));
+
+        test_engine.update_non_fungible_data("Shard Ticket", 1, "shard_type", env_args!(Some(ShardType::Clear)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 2, "shard_type", env_args!(Some(ShardType::Yellow)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 3, "shard_type", env_args!(Some(ShardType::Orange)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 4, "shard_type", env_args!(Some(ShardType::Blue)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 5, "shard_type", env_args!(Some(ShardType::Scrypto)), "admin badge").expect_commit_success();
+        test_engine.update_non_fungible_data("Shard Ticket", 6, "shard_type", env_args!(Some(ShardType::Radix)), "admin badge").expect_commit_success();
+
+        let ids= nf_ids![1, 2, 3, 4, 5, 6];
+        test_engine.call_method("swap_tickets", env_args!(NonFungible::Bucket("Shard Ticket", ids.clone()))).expect_commit_success();
 
         // 4h = 3600*4*1000 ms
         test_engine.advance_time(3600*4*1000);
-        test_engine.call_method("destroy", env_args!(Environment::NonFungibleBucket("Shard NFT", ids))).expect_commit_success();
+        test_engine.call_method("destroy", env_args!(NonFungible::Bucket("Shard NFT", ids))).expect_commit_success();
 
 
         assert_eq!(test_engine.current_balance( "Shard"), dec!(1000));
