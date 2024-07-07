@@ -6,8 +6,10 @@ pub enum ShardType {
     Yellow,
     Orange,
     Blue,
+    Emerald,
     Scrypto,
-    Radix
+    Radix,
+    Xian
 }
 
 #[derive(NonFungibleData, ScryptoSbor, Debug)]
@@ -32,8 +34,10 @@ impl ShardType {
             ShardType::Yellow => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeif2hgh76mc4ak4wqqqd5mm36mrboxirlb777cm5gyjpbefu5j75qm/") }
             ShardType::Orange => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeib7lcjwxchh5qv7lwtbizzd2wj5khjrexir6rx25fsqrlspxajk3m/") }
             ShardType::Blue => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeih3ctg2msgjdfcp6jfioyxbcsxkvyw3yxhsz36m4zmogieio3riau/") }
+            ShardType::Emerald => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeiaux56c55luoydoyzbztn26vqvo6xucvsuec67pcpi4dcc7qj57aq/") }
             ShardType::Scrypto => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeihf7lg7mokz3567xhm6leqo6oqte3k3nglg5jmwm67s435bv2zfma/") }
             ShardType::Radix => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeidyubnqsioriwika3hlyrpzu43zc6gipplftgpcjjbghu5xls6zma/") }
+            ShardType::Xian => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeiem72rof3pxg2ajxc5gizfvtrwdrlsl6gknhqvmcp2ejsabeovrim/") }
         }
     }
 
@@ -43,8 +47,10 @@ impl ShardType {
             ShardType::Yellow => { "Yellow Shard".to_string() }
             ShardType::Orange => { "Orange Shard".to_string() }
             ShardType::Blue => { "Blue Shard".to_string() }
+            ShardType::Emerald => { "Emerald Shard".to_string() }
             ShardType::Scrypto => { "Scrypto Shard".to_string() }
             ShardType::Radix => { "Radix Shard".to_string() }
+            ShardType::Xian => { "Xian Shard".to_string() }
         }
     }
 }

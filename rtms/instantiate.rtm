@@ -1,16 +1,1 @@
-CALL_METHOD
-    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
-    "lock_fee"
-    Decimal("5000")
-;
-CALL_FUNCTION
-    Address("package_sim1p40gjy9kwhn9fjwf9jur0axx72f7c36l6tx3z3vzefp0ytczcql99n")
-    "Shardz"
-    "instantiate_shardz"
-    Address("account_sim1cy8k0r7zhxw9gsn3pwgge6psmtdrkd5j5gy9nz0v5xx6a43xk89tts")
-;
-CALL_METHOD
-    Address("account_sim1cy8k0r7zhxw9gsn3pwgge6psmtdrkd5j5gy9nz0v5xx6a43xk89tts")
-    "deposit_batch"
-    Expression("ENTIRE_WORKTOP")
-;
+N
