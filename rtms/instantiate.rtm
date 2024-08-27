@@ -1,1 +1,11 @@
-N
+CALL_FUNCTION
+    Address("package_rdx1phs7je5pysgfaqy5vepxnumcm6aesmksw7vla7peqh60f0ve64ulz3")
+    "Shardz"
+    "instantiate_shardz"
+    Address("account_rdx12x3j8qcne03a0ga34pxayljp8n9r9pxyj743r864z3rj4n4tvjmnp7");
+
+CALL_METHOD
+    Address("account_rdx12x3j8qcne03a0ga34pxayljp8n9r9pxyj743r864z3rj4n4tvjmnp7")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

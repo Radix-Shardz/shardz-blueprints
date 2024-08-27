@@ -30,14 +30,14 @@ pub struct ShardTicket {
 impl ShardType {
     fn url(&self) -> Url {
         match self {
-            ShardType::Clear => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeigucelugs5ej3uak3jmwg5tqlotlk2izaezqvvtcdaa2xbnpchdea/") }
-            ShardType::Yellow => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeif2hgh76mc4ak4wqqqd5mm36mrboxirlb777cm5gyjpbefu5j75qm/") }
-            ShardType::Orange => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeib7lcjwxchh5qv7lwtbizzd2wj5khjrexir6rx25fsqrlspxajk3m/") }
-            ShardType::Blue => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeih3ctg2msgjdfcp6jfioyxbcsxkvyw3yxhsz36m4zmogieio3riau/") }
-            ShardType::Emerald => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeiaux56c55luoydoyzbztn26vqvo6xucvsuec67pcpi4dcc7qj57aq/") }
-            ShardType::Scrypto => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeihf7lg7mokz3567xhm6leqo6oqte3k3nglg5jmwm67s435bv2zfma/") }
-            ShardType::Radix => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeidyubnqsioriwika3hlyrpzu43zc6gipplftgpcjjbghu5xls6zma/") }
-            ShardType::Xian => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeiem72rof3pxg2ajxc5gizfvtrwdrlsl6gknhqvmcp2ejsabeovrim/") }
+            ShardType::Clear => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeiaqk6nm4mxiziok5kuyi4mimazhq3igltzykptt6xy2gc5smhbssu/") }
+            ShardType::Yellow => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeihytefgkopyfga2z4fj7ebif45agp4miojz2jifpfzn6e7gguw5iq/") }
+            ShardType::Orange => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeighppalg2cdl2ianj7smq3hzy77uxa2pt2ua3diasijpd3xhpk3ay/") }
+            ShardType::Blue => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeievssxxue2k54g3eh2p46xuwnlrqkw4tebntyuy5jqdwvle55n2be/") }
+            ShardType::Emerald => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeibgcuwuofpe4a4537r3gjrpqqukqhmc5w3wpltqsdqtbdvyqmzidq/") }
+            ShardType::Scrypto => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeid2tvh6hy5oqupqjhhn2nbxasube4z22ikgiq4nednkimta6ckdai/") }
+            ShardType::Radix => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeic4j2jv35mtqz2t4hoyaujh4ksknlsu2dfheybyigiwufurvquu2m/") }
+            ShardType::Xian => { Url::of("https://ipfs.dexteronradix.com/ipfs/bafybeie7ytmrxskdsxr4e2axci6k2756jelfldcgannia5575yqj5pqbci/") }
         }
     }
 
@@ -56,10 +56,10 @@ impl ShardType {
 }
 
 #[blueprint]
-#[types(Vault, NonFungibleLocalId, NonFungibleGlobalId)]
+#[types(ShardTicket, ShardNFT)]
 mod rrc404 {
 
-    const SHARDZ_BADGE: ResourceAddress = ResourceAddress::new_or_panic([93, 201, 69, 13, 168, 220, 149, 250, 145, 246, 251, 14, 141, 249, 121, 69, 17, 239, 203, 88, 143, 1, 136, 216, 202, 236, 14, 143, 247, 158]);
+    const SHARDZ_BADGE: ResourceAddress = ResourceAddress::new_or_panic([93, 234, 158, 5, 11, 143, 100, 156, 203, 137, 140, 82, 189, 231, 139, 42, 183, 255, 29, 40, 228, 152, 189, 32, 191, 126, 184, 201, 245, 89]);
 
     const SHARDZ_DESCRIPTION: &str = "Shardz is a revolutionary NFT mini game built on the Radix ledger. 1000 tokens can be shattered and bonded in an attempt to find the rarest shards.";
 
@@ -240,7 +240,7 @@ mod rrc404 {
                 
                 let data = self.shardz_nft.get_non_fungible_data::<ShardNFT>(&nft_id);
 
-                // Check that each nft is past a 4 hour cooldown period for rerolling
+                // Check that each nft is past a 4-hour cooldown period for re-rolling
                 let last_roll = data.mint_time;
                 let last_roll_utc = UtcDateTime::try_from(last_roll).unwrap();
                 let next_roll_utc= last_roll_utc.add_hours(4).unwrap();
